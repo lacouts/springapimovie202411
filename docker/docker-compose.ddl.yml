@@ -1,0 +1,4 @@
+services:
+  db:
+    volumes:
+      - ./sql-ddl:/docker-entrypoint-initdb.d

@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:${DB_VERSION:-16.4}
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT:-5432}:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME:-dbmovie}
+      POSTGRES_USER: ${DB_USER:-movie}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
