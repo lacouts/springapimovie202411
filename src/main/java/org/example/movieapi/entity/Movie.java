@@ -44,11 +44,11 @@ public class Movie {
     private MovieColor color;
 
     // @Transient: before association mapping
-    @ManyToOne
+    @ManyToOne  // (fetch = FetchType.LAZY)
     @JoinColumn(name = "director_id") // default: nullable = true
     private Person director;
 
-    @ManyToMany
+    @ManyToMany // (fetch = FetchType.EAGER)
     @JoinTable(
             name = "play",
             joinColumns = @JoinColumn(name = "movie_id"),  // FK: Play.movie_id references movie(id)

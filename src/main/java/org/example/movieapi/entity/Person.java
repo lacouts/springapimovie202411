@@ -10,6 +10,19 @@ public class Person {
     private String name;
     private LocalDate birthdate;
 
+    // needed by JPA
+    public Person() {
+    }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public Person(String name, LocalDate birthdate) {
+        this.name = name;
+        this.birthdate = birthdate;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Integer getId() {
