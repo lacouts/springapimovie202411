@@ -1,12 +1,12 @@
 
 create table person (
-	id serial constraint pk_stars primary key,
+	id int constraint pk_stars primary key,
 	name varchar(150) not null,
 	birthdate date null
 );
 
 create table movie (
-	id serial constraint pk_movie primary key,
+	id int constraint pk_movie primary key,
 	title varchar(300) not null,
 	year smallint not null,
 	duration smallint null,
@@ -44,4 +44,5 @@ alter table have_genre add constraint FK_HAVE_GENRE
 	FOREIGN KEY (movie_id)
 	references movie(id);
 
-
+create sequence person_seq start with 1;
+create sequence movie_seq start with 1;

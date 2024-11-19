@@ -1,2 +1,2 @@
-select setval('persons_id_seq', max(id)) from persons;
-select setval('movies_id_seq', max(id)) from movies;
+select setval('person_seq', max(id)) from persons;
+select setval('movie_seq', max(id)) from movies;
