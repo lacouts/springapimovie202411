@@ -16,7 +16,7 @@ import java.util.Set;
 @ToString(of = {"id", "title", "year"})
 // JPA
 @Entity // this class is handled by Hibernate
-@Table(name = "t_movie") // indexes, schema, uniqueConstraints
+    // @Table(name = "t_movie") // Tuning: tablename, indexes, schema, uniqueConstraints
 public class Movie {
     // NB: by default all attributes are persistent except if annotated with @Transient
 
@@ -26,7 +26,9 @@ public class Movie {
     // - SEQUENCE: a sequence is created in db
     //          hibernate calls sequence, then execute INSERT with this pk
     @Id // primary key + unique +  not null
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) // ok with generate.ddl=create|update
+//    @GeneratedValue(generator = "movie_seq") // ok with all values for generate.ddl
+//    @SequenceGenerator(name = "movie_seq", sequenceName = "movie_seq")
     private Integer id;
 
     @Column(nullable = false, length = 300)

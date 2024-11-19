@@ -25,6 +25,8 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @GeneratedValue(generator = "person_seq") // ok with all values for generate.ddl
+//    @SequenceGenerator(name = "person_seq", sequenceName = "person_seq")
     public Integer getId() {
         return id;
     }
