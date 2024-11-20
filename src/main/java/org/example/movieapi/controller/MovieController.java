@@ -1,19 +1,15 @@
 package org.example.movieapi.controller;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.example.movieapi.dto.MovieDto;
-import org.example.movieapi.repository.MovieRepository;
+import org.example.movieapi.dto.MovieDtoCreate;
+import org.example.movieapi.dto.MovieDtoSimple;
 import org.example.movieapi.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/movie")
@@ -28,7 +24,7 @@ public class MovieController {
      * @return movies
      */
     @GetMapping
-    public List<MovieDto> allMovies(){
+    public List<MovieDtoCreate> allMovies(){
 //        return List.of(
 //            new Movie("Dune I", 2019),
 //            new Movie("Dune II", 2024)
@@ -43,7 +39,7 @@ public class MovieController {
      * @return the movie with this id
      */
     @GetMapping("/{id}")
-    public MovieDto movieById(@PathVariable("id") int id){
+    public MovieDtoCreate movieById(@PathVariable("id") int id){
         // return new Movie("Ocean", 2024);
 //        return movieRepository.findById(id)
 //                .orElseThrow(() -> new ErrorResponseException(HttpStatus.NOT_FOUND));
@@ -66,7 +62,7 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public List<MovieDto> search(
+    public List<MovieDtoCreate> search(
             @RequestParam(name = "y", required = false) Integer year,
             @RequestParam(name = "t", required = false) String titlePart
     ){
@@ -98,9 +94,8 @@ public class MovieController {
             }
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public MovieDto addMovie(@RequestBody MovieDto movie){
-        // return movieRepository.saveAndFlush(movie);
-        return null;
+    public MovieDtoSimple addMovie(@RequestBody MovieDtoCreate movie){
+        return movieService.add(movie);
     }
 
 }
