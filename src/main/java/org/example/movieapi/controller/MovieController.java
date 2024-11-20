@@ -1,19 +1,27 @@
 package org.example.movieapi.controller;
 
 import org.example.movieapi.dto.MovieDtoCreate;
+import org.example.movieapi.dto.MovieDtoDetail;
 import org.example.movieapi.dto.MovieDtoSimple;
 import org.example.movieapi.service.MovieService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/movie")
 public class MovieController {
+
+    // NB: can be generated with lombok @Slf4j
+    Logger log = LoggerFactory.getLogger(MovieController.class);
 
     @Autowired
     private MovieService movieService;
@@ -24,13 +32,8 @@ public class MovieController {
      * @return movies
      */
     @GetMapping
-    public List<MovieDtoCreate> allMovies(){
-//        return List.of(
-//            new Movie("Dune I", 2019),
-//            new Movie("Dune II", 2024)
-//        );
-//        return movieRepository.findAll();
-        return null;
+    public List<MovieDtoSimple> allMovies(){
+        return movieService.getAll();
     }
 
     /**
@@ -39,12 +42,12 @@ public class MovieController {
      * @return the movie with this id
      */
     @GetMapping("/{id}")
-    public MovieDtoCreate movieById(@PathVariable("id") int id){
-        // return new Movie("Ocean", 2024);
-//        return movieRepository.findById(id)
-//                .orElseThrow(() -> new ErrorResponseException(HttpStatus.NOT_FOUND));
-        // NB: exception ErrorResponseException mapped with HTTP Status 404
-        return null;
+    public MovieDtoDetail movieById(@PathVariable("id") int id){
+        return movieService.getById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        MessageFormat.format("Movie not found with id <{0}>", id)
+                ));
     }
 
     // Method with wrapper around response: ResponseEntity
@@ -52,13 +55,12 @@ public class MovieController {
     // - headers, http status
     @GetMapping("/{id}/alt")
     public ResponseEntity<?> movieByIdWrapper(@PathVariable("id") int id){
-//        var optMovie = movieRepository.findById(id);
-//        if (optMovie.isPresent()) {
-//            return ResponseEntity.ok(optMovie.get()); // returns ResponseEntity<Movie>
-//        } else {
-//            return ResponseEntity.notFound().build(); // return ResponseEntity<?>
-//        }
-        return null;
+        var optMovie = movieService.getById(id);
+        if (optMovie.isPresent()) {
+            return ResponseEntity.ok(optMovie.get()); // returns ResponseEntity<Movie>
+        } else {
+            return ResponseEntity.notFound().build(); // return ResponseEntity<?>
+        }
     }
 
     @GetMapping("/search")
@@ -95,7 +97,9 @@ public class MovieController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public MovieDtoSimple addMovie(@RequestBody MovieDtoCreate movie){
-        return movieService.add(movie);
+        var movieResponse =  movieService.add(movie);
+        log.info("Movie added: {}", movieResponse);
+        return movieResponse;
     }
 
 }

@@ -1,17 +1,22 @@
 package org.example.movieapi.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.movieapi.dto.MovieDtoCreate;
 import org.example.movieapi.dto.MovieDtoDetail;
 import org.example.movieapi.dto.MovieDtoSimple;
 import org.example.movieapi.entity.Movie;
 import org.example.movieapi.repository.MovieRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+@Slf4j // create logger for this class: attribute log
 @Profile("jpa")
 @Service
 public class MovieServiceJpa implements MovieService{
@@ -19,29 +24,29 @@ public class MovieServiceJpa implements MovieService{
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public MovieDtoSimple add(MovieDtoCreate movieDto) {
-        var movieEntity = Movie.builder()
-                .title(movieDto.getTitle())
-                .year(movieDto.getYear())
-                .build();
+        Movie movieEntity = modelMapper.map(movieDto, Movie.class);
         movieRepository.saveAndFlush(movieEntity);
-        return MovieDtoSimple.builder()
-                .id(movieEntity.getId())
-                .title(movieEntity.getTitle())
-                .year(movieEntity.getYear())
-                .build();
+        log.debug("Movie added in database: {}", movieEntity);
+        return modelMapper.map(movieEntity, MovieDtoSimple.class);
     }
 
     @Override
     public Optional<MovieDtoDetail> getById(int id) {
-        return Optional.empty();
+        return movieRepository.findById(id)
+                .map(movieEntity -> modelMapper.map(movieEntity, MovieDtoDetail.class));
     }
 
     @Override
     public List<MovieDtoSimple> getAll() {
-        return List.of();
+        return movieRepository.findAll(Sort.by("year", "title"))
+                .stream()
+                .map(movieEntity -> modelMapper.map(movieEntity, MovieDtoSimple.class))
+                .toList();
     }
 
     @Override

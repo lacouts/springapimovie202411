@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @Getter
 @Setter
+@ToString
 public class PersonDtoCreate {
     private String name;
     private LocalDate birthdate;

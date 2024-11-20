@@ -17,6 +17,13 @@ import java.util.Set;
 // JPA
 @Entity // this class is handled by Hibernate
     // @Table(name = "t_movie") // Tuning: tablename, indexes, schema, uniqueConstraints
+@NamedEntityGraph(
+        name="Movie.directorAndActors",
+        attributeNodes = {
+                @NamedAttributeNode("director"),
+                @NamedAttributeNode("actors")
+        }
+)
 public class Movie {
     // NB: by default all attributes are persistent except if annotated with @Transient
 
@@ -47,11 +54,11 @@ public class Movie {
     private MovieColor color;
 
     // @Transient: before association mapping
-    @ManyToOne  // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "director_id") // default: nullable = true
     private Person director;
 
-    @ManyToMany // (fetch = FetchType.EAGER)
+    @ManyToMany //(fetch = FetchType.EAGER)
     @JoinTable(
             name = "play",
             joinColumns = @JoinColumn(name = "movie_id"),  // FK: Play.movie_id references movie(id)

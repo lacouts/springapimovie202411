@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class MovieDtoSimple extends MovieDtoCreate {
     private int id;
 }
