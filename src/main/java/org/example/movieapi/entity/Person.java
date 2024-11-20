@@ -1,9 +1,11 @@
 package org.example.movieapi.entity;
 
 import jakarta.persistence.*;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
+@ToString
 @Entity
 public class Person {
     private Integer id;
