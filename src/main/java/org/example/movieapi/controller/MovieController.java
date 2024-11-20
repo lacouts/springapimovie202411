@@ -3,6 +3,7 @@ package org.example.movieapi.controller;
 import org.apache.commons.lang3.NotImplementedException;
 import org.example.movieapi.dto.MovieDto;
 import org.example.movieapi.repository.MovieRepository;
+import org.example.movieapi.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.Objects;
 public class MovieController {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private MovieService movieService;
 
     /**
      * route: /api/movie

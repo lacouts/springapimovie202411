@@ -1,5 +1,7 @@
 services:
   db:
+    hostname: ${DB_HOSTNAME:-srvpg}
+    container_name: ${DB_HOSTNAME:-srvpg}
     image: postgres:${DB_VERSION:-16.4}
     restart: unless-stopped
     ports:

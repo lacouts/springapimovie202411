@@ -44,5 +44,5 @@ alter table have_genre add constraint FK_HAVE_GENRE
 	FOREIGN KEY (movie_id)
 	references movie(id);
 
-create sequence person_seq start with 1;
-create sequence movie_seq start with 1;
+create sequence person_seq start with 1 increment by 50;
+create sequence movie_seq start with 1 increment by 50;

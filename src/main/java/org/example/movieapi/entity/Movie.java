@@ -26,9 +26,10 @@ public class Movie {
     // - SEQUENCE: a sequence is created in db
     //          hibernate calls sequence, then execute INSERT with this pk
     @Id // primary key + unique +  not null
-    @GeneratedValue(strategy = GenerationType.SEQUENCE) // ok with generate.ddl=create|update
-//    @GeneratedValue(generator = "movie_seq") // ok with all values for generate.ddl
-//    @SequenceGenerator(name = "movie_seq", sequenceName = "movie_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) // NB: ddl.auto=none, must map allocation_size = 50
+    // NB: strategy can be replaced (or complemented) with generator and @SequenceGenerator
+    //    @GeneratedValue(generator = "movie_seq") // NB: ddl.auto=none, choose your seq name and allocationSize
+    //    @SequenceGenerator(name = "movie_seq", sequenceName = "movie_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false, length = 300)

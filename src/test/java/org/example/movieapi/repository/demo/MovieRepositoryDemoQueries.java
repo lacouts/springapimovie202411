@@ -18,6 +18,8 @@ public class MovieRepositoryDemoQueries {
     @Test
     void demoFindAll(){
         var movies = movieRepository.findAll();
-        System.out.println(movies);
+        movies.stream()
+                .limit(10)
+                .forEach(System.out::println);
     }
 }
