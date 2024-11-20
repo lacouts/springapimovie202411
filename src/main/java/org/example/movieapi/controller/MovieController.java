@@ -1,5 +1,6 @@
 package org.example.movieapi.controller;
 
+import jakarta.validation.Valid;
 import org.example.movieapi.dto.MovieDtoCreate;
 import org.example.movieapi.dto.MovieDtoDetail;
 import org.example.movieapi.dto.MovieDtoSimple;
@@ -96,7 +97,7 @@ public class MovieController {
             }
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public MovieDtoSimple addMovie(@RequestBody MovieDtoCreate movie){
+    public MovieDtoSimple addMovie(@Valid @RequestBody MovieDtoCreate movie){
         var movieResponse =  movieService.add(movie);
         log.info("Movie added: {}", movieResponse);
         return movieResponse;
