@@ -23,14 +23,20 @@ import java.util.Set;
 @Service
 public class MovieServiceJpa implements MovieService{
 
-    @Autowired
+    // @Autowired
     private MovieRepository movieRepository;
 
-    @Autowired
+    // @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
+    // @Autowired
     private ModelMapper modelMapper;
+
+    public MovieServiceJpa(MovieRepository movieRepository, PersonRepository personRepository, ModelMapper modelMapper) {
+        this.movieRepository = movieRepository;
+        this.personRepository = personRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public MovieDtoSimple add(MovieDtoCreate movieDto) {

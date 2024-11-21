@@ -126,7 +126,7 @@ public class MovieController {
                 ));
     }
 
-    @PatchMapping("/{idMovie}/setActors/{idDirector}")
+    @PatchMapping("/{idMovie}/setActors")
     public MovieDtoDetail setActors(
             @PathVariable("idMovie") int idMovie,
             @RequestBody List<Integer> idActors
