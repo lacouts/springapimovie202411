@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -114,6 +116,39 @@ public class MovieRepositoryDemoQueries {
                 .limit(10)
                 .forEach(movie -> System.out.println(MessageFormat.format(
                         "{0} with director {1}", movie, movie.getDirector().getName())));
+    }
+
+    static Stream<Sort> demoFindByDirectorPartialSortSource(){
+        return Stream.of(
+                Sort.by("year"),
+                Sort.by("director.name", "year")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("demoFindByDirectorPartialSortSource")
+    void demoFindByDirectorPartialSort(Sort sort){
+        String partialName = "john";
+        var movies = movieRepository.findByDirectorPartial(partialName, sort);
+        movies.forEach(movie -> System.out.println(MessageFormat.format(
+                        "{0} with director {1}", movie, movie.getDirector().getName())));
+    }
+
+    @Test
+    void demoFindByDirectorPartialPageable(){
+        String partialName = "john";
+        Pageable pageable = Pageable.ofSize(10);
+        Page<Movie> moviePage = null;
+        do {
+            moviePage = movieRepository.findByDirectorPartial(partialName, pageable);
+            System.out.println("Nb pages:" + moviePage.getTotalPages());
+            System.out.println("Nb total elements:" + moviePage.getTotalElements());
+            System.out.println("Page:");
+            moviePage.get() // stream page
+                    .forEach(movie -> System.out.println(MessageFormat.format(
+                    "{0} with director {1}", movie, movie.getDirector().getName())));
+            pageable = moviePage.nextPageable();
+        } while (moviePage.hasNext());
     }
 
     @Test
