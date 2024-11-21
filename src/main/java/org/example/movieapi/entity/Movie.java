@@ -24,6 +24,17 @@ import java.util.Set;
                 @NamedAttributeNode("actors")
         }
 )
+@NamedQuery(
+        name = "Movie.findByTitleYearDuration",
+        query = """
+            SELECT m 
+            FROM Movie m 
+            WHERE 
+                LOWER(m.title) like '%' || ?1 || '%' 
+                AND m.year BETWEEN ?2 AND ?3 
+                AND m.duration BETWEEN ?4 AND ?5 
+            """
+)
 public class Movie {
     // NB: by default all attributes are persistent except if annotated with @Transient
 

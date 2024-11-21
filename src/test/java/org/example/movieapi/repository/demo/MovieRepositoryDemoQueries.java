@@ -6,6 +6,7 @@ import org.example.movieapi.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -101,12 +102,29 @@ public class MovieRepositoryDemoQueries {
                         "{0} with director {1}", movie, movie.getDirector().getName())));
     }
 
-    @Test
-    void demoFindByDirectorPartial(){
-        var movies = movieRepository.findByDirectorPartial("eastwood");
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "clint",
+            "eastwood",
+            "clint eastwood"
+    })
+    void demoFindByDirectorPartial(String partialName){
+        var movies = movieRepository.findByDirectorPartial(partialName);
         movies.stream()
                 .limit(10)
                 .forEach(movie -> System.out.println(MessageFormat.format(
                         "{0} with director {1}", movie, movie.getDirector().getName())));
+    }
+
+    @Test
+    void demoFindByTitleYearDuration() {
+        String title = "star";
+        int year1 = 1980;
+        int year2 = 1989;
+        int duration1 = 120;
+        int duration2 = Integer.MAX_VALUE;
+        var movies = movieRepository.findByTitleYearDuration(title, year1, year2, duration1, duration2);
+        movies.forEach(movie -> System.out.println(MessageFormat.format(
+                        "{0} with duration {1}", movie, movie.getDuration())));
     }
 }
