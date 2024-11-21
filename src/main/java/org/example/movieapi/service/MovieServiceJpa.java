@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Transactional
 @Slf4j // create logger for this class: attribute log
 @Profile("jpa")
 @Service
@@ -46,12 +48,14 @@ public class MovieServiceJpa implements MovieService{
         return modelMapper.map(movieEntity, MovieDtoSimple.class);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<MovieDtoDetail> getById(int id) {
         return movieRepository.findById(id)
                 .map(movieEntity -> modelMapper.map(movieEntity, MovieDtoDetail.class));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<MovieDtoSimple> getAll() {
         return movieRepository.findAll(Sort.by("year", "title"))

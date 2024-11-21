@@ -15,20 +15,20 @@ public class MovieAddAspect {
     private static final Logger log = LoggerFactory.getLogger(MovieAddAspect.class);
 
     @Before(
-            value = "execution(* org.example.movieapi.service.impl.MovieServiceJpa.add(org.example.movieapi.dto.MovieCreate))" +
+            value = "execution(* org.example.movieapi.service.MovieServiceJpa.add(org.example.movieapi.dto.MovieDtoCreate))" +
                     " && args(movie)"
     )
     public void beforeMovieAdded(MovieDtoCreate movie) {
         log.debug("Movie about to be added: {}", movie);
     }
 
-    @After("execution(* org.example.movieapi.service.impl.MovieServiceJpa.add(..))")
+    @After("execution(* org.example.movieapi.service.MovieServiceJpa.add(..))")
     public void afterMovieAdded(){
         log.debug("Movie added has been called");
     }
 
     @AfterReturning(
-            pointcut = "execution(* org.example.movieapi.service.impl.MovieServiceJpa.add(..))",
+            pointcut = "execution(* org.example.movieapi.service.MovieServiceJpa.add(..))",
             returning = "movieAdded"
     )
     public void afterReturningMovieAdded(MovieDtoSimple movieAdded){
@@ -36,7 +36,7 @@ public class MovieAddAspect {
     }
 
     @AfterThrowing(
-            pointcut = "execution(* org.example.movieapi.service.impl.MovieServiceJpa.add(..))",
+            pointcut = "execution(* org.example.movieapi.service.MovieServiceJpa.add(..))",
             throwing = "error"
     )
     public void afterReturningMovieAdded(Exception error){

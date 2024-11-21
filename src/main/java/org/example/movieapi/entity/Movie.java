@@ -77,4 +77,8 @@ public class Movie {
     )
     private Set<Person> actors;
 
+    // NB: association @ManyToMany with extra columns
+    //   TIP: => split in 2 @ManyToOne/@OneToMany with explicit entity Play
+
+
 }

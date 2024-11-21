@@ -23,7 +23,7 @@ import java.util.List;
 public class MovieController {
 
     // NB: can be generated with lombok @Slf4j
-    Logger log = LoggerFactory.getLogger(MovieController.class);
+    private final static Logger log = LoggerFactory.getLogger(MovieController.class);
 
     @Autowired
     private MovieService movieService;

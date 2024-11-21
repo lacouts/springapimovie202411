@@ -13,14 +13,14 @@ public class UpdateDataAspect {
 
     private static final Logger log = LoggerFactory.getLogger(UpdateDataAspect.class);
 
-    @Pointcut("execution(* org.example.movieapi.service.impl.*.add*(..))")
+    @Pointcut("execution(* org.example.movieapi.service.*.add*(..))")
     public void add(){}
 
-    @Pointcut("execution(* org.example.movieapi.service.impl.*.update*(..))" +
-            " || execution(* org.example.movieapi.service.impl.*.set*(..))")
+    @Pointcut("execution(* org.example.movieapi.service.*.update*(..))" +
+            " || execution(* org.example.movieapi.service.*.set*(..))")
     public void update(){}
 
-    @Pointcut("execution(* org.example.movieapi.service.impl.*.delete*(..))")
+    @Pointcut("execution(* org.example.movieapi.service.*.delete*(..))")
     public void delete(){}
 
     @AfterReturning(

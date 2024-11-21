@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @ToString
 @Entity
@@ -54,5 +55,12 @@ public class Person {
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
+
+    // Bidrectional association (Be careful with 'update' scenario !)
+//    @OneToMany(mappedBy = "director")
+//    public Set<Movie> directedMovies;
+//
+//    @ManyToMany(mappedBy = "actors")
+//    public Set<Movie> playedMovies;
 
 }
