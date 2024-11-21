@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.movieapi.dto.MovieDtoCreate;
 import org.example.movieapi.dto.MovieDtoDetail;
 import org.example.movieapi.dto.MovieDtoSimple;
+import org.example.movieapi.errors.NotFoundException;
 import org.example.movieapi.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,13 @@ public class MovieController {
     @GetMapping("/{id}")
     public MovieDtoDetail movieById(@PathVariable("id") int id){
         return movieService.getById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        MessageFormat.format("Movie not found with id <{0}>", id)
-                ));
+                // using spring exception:
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.NOT_FOUND,
+//                        MessageFormat.format("Movie not found with id <{0}>", id)
+//                ))
+                // using custom exception
+                .orElseThrow(NotFoundException::new);
     }
 
     // Method with wrapper around response: ResponseEntity
@@ -101,6 +105,46 @@ public class MovieController {
         var movieResponse =  movieService.add(movie);
         log.info("Movie added: {}", movieResponse);
         return movieResponse;
+    }
+
+    @PutMapping
+    public MovieDtoSimple update(@Valid @RequestBody MovieDtoSimple movie) {
+        return movieService.update(movie)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "movie not found"
+                ));
+    }
+
+    @PatchMapping("/{idMovie}/setDirector/{idDirector}")
+    public MovieDtoDetail setDirector(
+            @PathVariable("idMovie") int idMovie,
+            @PathVariable("idDirector") int idDirector
+    ){
+        return movieService.setDirector(idMovie, idDirector)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "movie or director not found"
+                ));
+    }
+
+    @PatchMapping("/{idMovie}/setActors/{idDirector}")
+    public MovieDtoDetail setActors(
+            @PathVariable("idMovie") int idMovie,
+            @RequestBody List<Integer> idActors
+    ){
+        return movieService.setActors(idMovie, idActors)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "movie or actors not found"
+                ));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable("id") int id) {
+        if (!movieService.delete(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "movie or director not found"
+            );
+        }
     }
 
 }

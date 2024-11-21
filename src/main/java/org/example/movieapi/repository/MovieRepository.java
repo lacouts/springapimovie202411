@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 // implicitly: @Repository
-public interface MovieRepository extends JpaRepository<Movie, Integer>, MovieRepositoryExtension {
+public interface MovieRepository extends JpaRepository<Movie, Integer>,
+        MovieRepositoryExtension // extension with implementation with criteria api query
+{
 
     // NB: result type for entity Movie can be:
     // Movie, Optional<Movie>,

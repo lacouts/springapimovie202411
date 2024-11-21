@@ -29,7 +29,7 @@ public class MovieServiceDummy implements MovieService{
     }
 
     @Override
-    public MovieDtoSimple update(MovieDtoSimple movieDto) {
+    public Optional<MovieDtoSimple> update(MovieDtoSimple movieDto) {
         return null;
     }
 
@@ -41,5 +41,10 @@ public class MovieServiceDummy implements MovieService{
     @Override
     public Optional<MovieDtoDetail> setActors(int movieId, List<Integer> actorIds) {
         return Optional.empty();
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
     }
 }

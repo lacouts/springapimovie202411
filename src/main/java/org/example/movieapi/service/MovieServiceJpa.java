@@ -5,7 +5,9 @@ import org.example.movieapi.dto.MovieDtoCreate;
 import org.example.movieapi.dto.MovieDtoDetail;
 import org.example.movieapi.dto.MovieDtoSimple;
 import org.example.movieapi.entity.Movie;
+import org.example.movieapi.errors.NotFoundException;
 import org.example.movieapi.repository.MovieRepository;
+import org.example.movieapi.repository.PersonRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -23,6 +25,9 @@ public class MovieServiceJpa implements MovieService{
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -50,17 +55,50 @@ public class MovieServiceJpa implements MovieService{
     }
 
     @Override
-    public MovieDtoSimple update(MovieDtoSimple movieDto) {
-        return null;
+    public Optional<MovieDtoSimple> update(MovieDtoSimple movie) {
+        return  movieRepository.findById(movie.getId())
+                .map(movieEntity -> {
+                    modelMapper.map(movie, movieEntity);
+                    movieRepository.saveAndFlush(movieEntity);
+                    return modelMapper.map(movieEntity, MovieDtoSimple.class);
+                });
     }
 
     @Override
-    public Optional<MovieDtoDetail> setDirector(int movieId, int directorId) {
-        return Optional.empty();
+    public Optional<MovieDtoDetail> setDirector(int idMovie, int idDirector) {
+        return movieRepository.findById(idMovie)
+                .flatMap(movieEntity -> personRepository.findById(idDirector)
+                        .map(directorEntity -> {
+                            movieEntity.setDirector(directorEntity);
+                            movieRepository.saveAndFlush(movieEntity);
+                            return modelMapper.map(movieEntity, MovieDtoDetail.class);
+                        })
+                );
     }
 
     @Override
     public Optional<MovieDtoDetail> setActors(int movieId, List<Integer> actorIds) {
-        return Optional.empty();
+        return movieRepository.findById(movieId)
+                .flatMap(movieEntity -> {
+                    var actorEntities = personRepository.findAllById(actorIds);
+                    if (actorEntities.size() != actorIds.size()) return Optional.empty();
+                    // update actors list
+                    movieEntity.getActors().clear();
+                    movieEntity.getActors()
+                            .addAll(actorEntities);
+                    movieRepository.flush();
+                    return Optional.of(modelMapper.map(movieEntity, MovieDtoDetail.class));
+                });
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return movieRepository.findById(id)
+                .map(movieEntity -> {
+                    movieRepository.deleteById(id);
+                    movieRepository.flush();
+                    return true;
+                })
+                .orElse(false);
     }
 }
