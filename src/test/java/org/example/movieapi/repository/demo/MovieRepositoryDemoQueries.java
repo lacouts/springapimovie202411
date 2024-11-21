@@ -162,4 +162,37 @@ public class MovieRepositoryDemoQueries {
         movies.forEach(movie -> System.out.println(MessageFormat.format(
                         "{0} with duration {1}", movie, movie.getDuration())));
     }
+
+    @Test
+    void testGetStatisticsByYear(){
+        int year1 = 1980;
+        int year2 = 1989;
+        var statistics = movieRepository.getStatisticsByYear(year1, year2);
+        statistics.forEach(System.out::println);
+    }
+
+    @Test
+    void testGetStatisticsByYearI(){
+        int year1 = 1980;
+        int year2 = 1989;
+        var statistics = movieRepository.getStatisticsByYearI(year1, year2);
+        statistics.forEach(stats -> System.out.println(MessageFormat.format(
+                "year={0}: count={1}, min duration={2}, max duration={3}, average duration={4}",
+                stats.getYear(),
+                stats.getMovieCount(),
+                stats.getMinDuration(),
+                stats.getMaxDuration(),
+                stats.getAvgDuration()
+        )));
+    }
+
+    @Test
+    void demoFindByDirectorNameCB(){
+        String name = "Clint easTwooDt ";
+        var movies = movieRepository.findByDirectorNameCB(name);
+        movies.stream()
+                .limit(10)
+                .forEach(movie -> System.out.println(MessageFormat.format(
+                        "{0} with director {1}", movie, movie.getDirector().getName())));
+    }
 }

@@ -1,5 +1,6 @@
 package org.example.movieapi.repository;
 
+import org.example.movieapi.dto.IMovieDtoStatsByYear;
 import org.example.movieapi.dto.MovieDtoStatsByYear;
 import org.example.movieapi.entity.Movie;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 // implicitly: @Repository
-public interface MovieRepository extends JpaRepository<Movie, Integer> {
+public interface MovieRepository extends JpaRepository<Movie, Integer>, MovieRepositoryExtension {
 
     // NB: result type for entity Movie can be:
     // Movie, Optional<Movie>,
@@ -80,6 +81,21 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     ORDER BY m.year
     """)
     List<MovieDtoStatsByYear> getStatisticsByYear(int firstYear, int lastYear);
+
+    @Query("""
+    SELECT 
+        m.year as year, 
+        COUNT(*) as movieCount, 
+        MIN(m.duration) as minDuration, 
+        MAX(m.duration) as maxDuration, 
+        AVG(m.duration) as avgDuration
+    FROM Movie m 
+    WHERE m.year 
+    BETWEEN :firstYear AND :lastYear  
+    GROUP BY m.year 
+    ORDER BY m.year
+    """)
+    List<IMovieDtoStatsByYear> getStatisticsByYearI(int firstYear, int lastYear);
 
     // see also native query
 }
