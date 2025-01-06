@@ -62,4 +62,25 @@ public class PersonControllerTest {
                 .should()
                 .add(ArgumentMatchers.any());
     }
+
+    @Test
+    void testAdd_notValid() throws Exception {
+        // given
+        // JSON person to add
+        var personJSON = "{\"name\": null}";
+
+        // 2 - when
+        mockMvc.perform(MockMvcRequestBuilders.post(URL_BASE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(personJSON))
+                .andDo(MockMvcResultHandlers.print())
+                // 3a - then/verify
+                .andExpect(MockMvcResultMatchers.status().is(418));
+                
+            
+        // 3b - verify: mock service has been called
+        BDDMockito.then(personService)
+                .shouldHaveNoInteractions();
+    }
 }

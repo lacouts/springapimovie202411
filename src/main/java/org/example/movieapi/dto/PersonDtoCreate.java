@@ -5,6 +5,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotEmpty;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class PersonDtoCreate {
+    @NotEmpty
     private String name;
     private LocalDate birthdate;
 }

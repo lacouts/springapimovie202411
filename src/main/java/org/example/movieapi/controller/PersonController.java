@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 public class PersonController {
 
     @PostMapping
-    public PersonDtoSimple add(@RequestBody @Valid PersonDtoCreate person){
+    public PersonDtoSimple add(@RequestBody PersonDtoCreate person){
         return null;
     }
 
