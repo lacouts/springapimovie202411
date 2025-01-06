@@ -7,6 +7,7 @@ import org.example.movieapi.dto.MovieDtoSimple;
 import org.example.movieapi.dto.PersonDtoSimple;
 import org.example.movieapi.service.MovieService;
 import org.example.movieapi.service.PersonService;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class PersonControllerTest {
     @MockBean
     PersonService personService;
 
-     void testAdd_valid() throws Exception {
+    @Test
+    void testAdd_valid() throws Exception {
         // given
         // JSON person to add
         var name = "Daniel Craig";
